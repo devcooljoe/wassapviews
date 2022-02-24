@@ -331,7 +331,7 @@ class ValidateNumberScreen extends StatelessWidget {
     UserSharedPreferences.setUserPhoneNumber(phoneNumber.phoneNumber!);
     PhoneNumberController _phoneNumberController = context.read(phoneNumberProvider.notifier);
     _phoneNumberController.setPhoneNumber(phoneNumber.phoneNumber!);
-    _checkPremiumPlanStatus(context);
+    checkPremiumPlanStatus(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -352,84 +352,5 @@ class ValidateNumberScreen extends StatelessWidget {
       ),
     );
     Navigator.pop(context);
-  }
-}
-
-void _checkPremiumPlanStatus(BuildContext context) async {
-  PhoneNumberController _phoneNumberController = context.read(phoneNumberProvider.notifier);
-  PremiumPlanController _premiumPlanController = context.read(premiumPlanProvider.notifier);
-  EndPlanDateController _endPlanDateController = context.read(endPlanDateProvider.notifier);
-  PremiumPlanStatusController _premiumPlanStatusController = context.read(premiumPlanStatusProvider.notifier);
-  try {
-    final _response = await post(
-      Uri.parse('https://app.wassapviews.ng/api/getpremiumstatus'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authKey,
-      },
-      body: jsonEncode(
-        {
-          'full_number': _phoneNumberController.getPhoneNumber(),
-        },
-      ),
-    ).timeout(
-      const Duration(seconds: 60),
-      onTimeout: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Connection timeout! Check your internet connection and try again.'),
-            duration: Duration(seconds: 4),
-          ),
-        );
-        return Response('Error', 500);
-      },
-    );
-    if (_response.statusCode == 200 || _response.statusCode == 201) {
-      dynamic _fetchedData = jsonDecode(_response.body);
-      if (_fetchedData['status'] == 'success') {
-        _premiumPlanStatusController.setPremiumPlanStatus(_fetchedData['data']['status']);
-        _premiumPlanController.setPremiumPlan(_fetchedData['data']['plan']);
-        _endPlanDateController.setEndPlanDate(_fetchedData['data']['end']);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _fetchedData['message'],
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.fromLTRB(
-              50,
-              0,
-              50,
-              70,
-            ),
-            duration: const Duration(seconds: 4),
-          ),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('An unexpected error occured'),
-          duration: Duration(seconds: 4),
-        ),
-      );
-    }
-  } on SocketException {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('An error occured! Check your internet connection and try again.'),
-        duration: Duration(seconds: 4),
-      ),
-    );
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('An unexpected error occured: $e'),
-        duration: const Duration(seconds: 4),
-      ),
-    );
   }
 }
