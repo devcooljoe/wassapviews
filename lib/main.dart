@@ -3,7 +3,6 @@ import 'package:wassapviews/libraries.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  LocalNotificationService.display(message);
 }
 
 Future<void> main() async {

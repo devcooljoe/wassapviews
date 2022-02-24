@@ -330,9 +330,9 @@ class GetVcfScreen extends StatelessWidget {
                       onPressed: () async {
                         await OpenFile.open("${appDocPath}/${_fileName}");
                         Navigator.pop(context, 'Cancel');
-                        // if (UserSharedPreferences.getRated() == 'false') {
-                        //   _showCustomDialog(context);
-                        // }
+                        if (UserSharedPreferences.getRated() == 'false') {
+                          _showCustomDialog(context);
+                        }
                       },
                     ),
                   ],
@@ -454,18 +454,18 @@ class GetVcfScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) => AlertDialog(
         title: const Text(
-          'Rate Wassapviews',
+          'Join us on Telegram',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        content: const Text('Please do well to rate us 5 stars on playstore.'),
+        content: const Text('Please join our official Telegram channel for more info, questions, updates, tutorial, etc.. .'),
         actions: <Widget>[
           CustomTextButton(
-            text: 'Rate Us',
+            text: 'Join Us',
             onPressed: () async {
               await UserSharedPreferences.setRated('true');
-              String url = 'https://play.google.com/store/apps/details?id=com.dartechlabs.wassapviews';
+              String url = 'https://t.me/wassapviews';
               if (await canLaunch(url)) {
                 await launch(url);
               } else {
