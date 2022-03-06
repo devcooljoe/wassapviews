@@ -51,7 +51,7 @@ class CustomDrawer extends StatelessWidget {
             leading: const FaIcon(FontAwesomeIcons.question, size: 15),
             title: Text('Learn how to use this app'),
             onTap: () async {
-              String url = 'https://youtu.be/fiIu4c1gfx8';
+              String url = 'https://www.youtube.com/watch?v=fiIu4c1gfx8';
               if (await canLaunch(url)) {
                 await launch(url);
               } else {

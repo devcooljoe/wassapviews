@@ -27,3 +27,5 @@ final internetProvider = StateNotifierProvider((ref) => InternetController());
 final premiumPlanStatusProvider = StateNotifierProvider((ref) => PremiumPlanStatusController());
 
 final watchAdProvider = StateNotifierProvider((ref) => WatchAdController());
+
+final shareAppProvider = StateNotifierProvider((ref) => ShareAppController());

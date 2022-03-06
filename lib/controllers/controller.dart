@@ -131,3 +131,11 @@ class WatchAdController extends StateNotifier {
     state = val;
   }
 }
+
+class ShareAppController extends StateNotifier {
+  ShareAppController() : super(false);
+
+  void setShareApp(bool val) {
+    state = val;
+  }
+}

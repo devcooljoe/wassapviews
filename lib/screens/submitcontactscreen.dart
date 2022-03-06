@@ -40,7 +40,7 @@ class SubmitContactScreen extends StatelessWidget {
                         onPressed: () async {
                           Navigator.pop(context);
                           UserSharedPreferences.setWatchedVideo(true);
-                          String url = 'https://youtu.be/fiIu4c1gfx8';
+                          String url = 'https://www.youtube.com/watch?v=fiIu4c1gfx8';
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {

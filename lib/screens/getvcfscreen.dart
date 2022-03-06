@@ -269,7 +269,7 @@ class GetVcfScreen extends StatelessWidget {
         String _number = _inititalNumber.substring(_code.length, _inititalNumber.length);
         try {
           _controller.setLoading(true);
-          var _testdir = await Directory('/storage/emulated/0/Wassapviews/vcf').create(recursive: true);
+          var _testdir = await Directory('storage/emulated/0/Wassapviews/vcf').create(recursive: true);
           String appDocPath = _testdir.path;
 
           final _response = await post(

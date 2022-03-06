@@ -82,6 +82,7 @@ class HomeScreen extends StatelessWidget {
       Navigator.pushNamed(context, message.data['route']);
     });
     PremiumPlanStatusController _premiumPlanStatusController = context.read(premiumPlanStatusProvider.notifier);
+    ShareAppController _shareAppController = context.read(shareAppProvider.notifier);
     if (_premiumPlanStatusController.getPremiumPlanStatus() != 'active') {
       Future.delayed(Duration(milliseconds: 500), () => GlobalVariables.loadInterstitialAd());
     }
@@ -275,6 +276,37 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+          Consumer(builder: (context, watch, widget) {
+            return (watch(shareAppProvider) as bool && UserSharedPreferences.getUserPhoneNumber() != '')
+                ? Container(
+                    color: AppColors.transparentBlack,
+                    child: AlertDialog(
+                      title: Text(
+                        'Share',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      content: Text('Please click the \'SHARE NOW\' button to share our app link on your WhatsApp status in order to use this app.'),
+                      actions: <Widget>[
+                        CustomTextButton(
+                          text: 'SHARE NOW',
+                          onPressed: () async {
+                            _shareAppController.setShareApp(true);
+                            String _link =
+                                "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                            if (await canLaunch(_link)) {
+                              await launch(_link);
+                            } else {
+                              throw 'Could not launch $_link';
+                            }
+                            await Future.delayed(const Duration(seconds: 10));
+                            Navigator.pop(context, 'Cancel');
+                          },
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox.shrink();
+          }),
           Consumer(builder: (context, watch, widget) {
             return (watch(internetProvider) as bool) ? SizedBox.shrink() : InternetDialog();
           }),

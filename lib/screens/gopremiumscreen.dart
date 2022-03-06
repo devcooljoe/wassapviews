@@ -595,8 +595,7 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
         );
       } else if (purchaseDetails.status == PurchaseStatus.purchased) {
         UserSharedPreferences.setPaidPlan(_plan);
-        await InAppPurchase.instance.completePurchase(purchaseDetails);
-        _activatePremuimPlan();
+        await InAppPurchase.instance.completePurchase(purchaseDetails).then((value) => _activatePremuimPlan());
       }
     });
   }
