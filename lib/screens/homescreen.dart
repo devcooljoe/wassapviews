@@ -65,7 +65,9 @@ class HomeScreen extends StatelessWidget {
       if (initpage >= itemcount) {
         initpage = 0;
       }
-      pageController.animateToPage(initpage, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+      if (pageController.hasClients) {
+        pageController.animateToPage(initpage, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+      }
     }
 
     Timer.periodic(Duration(seconds: 5), (Timer t) => setOnboardPage(context));
@@ -272,7 +274,6 @@ class HomeScreen extends StatelessWidget {
                       Column(
                         children: cardList.map((e) => e).toList(),
                       ),
-                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
@@ -280,7 +281,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Consumer(builder: (context, watch, widget) {
-            return (watch(shareAppProvider) as bool && UserSharedPreferences.getUserPhoneNumber() != '')
+            return (!(watch(shareAppProvider) as bool) && UserSharedPreferences.getUserPhoneNumber() != '')
                 ? Container(
                     color: AppColors.transparentBlack,
                     child: AlertDialog(
@@ -302,7 +303,6 @@ class HomeScreen extends StatelessWidget {
                               throw 'Could not launch $_link';
                             }
                             await Future.delayed(const Duration(seconds: 10));
-                            Navigator.pop(context);
                             Navigator.pop(context);
                           },
                         ),
