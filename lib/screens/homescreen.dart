@@ -87,7 +87,7 @@ class HomeScreen extends StatelessWidget {
     ShareAppController _shareAppController = context.read(shareAppProvider.notifier);
     if (_premiumPlanStatusController.getPremiumPlanStatus() != 'active') {
       Future.delayed(Duration(milliseconds: 500), () => GlobalVariables.loadInterstitialAd());
-      Timer.periodic(Duration(seconds: 30), (Timer t) => GlobalVariables.loadInterstitialAd());
+      Timer.periodic(Duration(seconds: 60), (Timer t) => GlobalVariables.loadInterstitialAd());
     }
     if (appJustLoaded) {
       Future.delayed(Duration(seconds: 1), () => fetchContactCount(context));
