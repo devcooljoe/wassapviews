@@ -212,6 +212,7 @@ class ValidateNumberScreen extends StatelessWidget {
           }),
         ],
       ),
+      bottomNavigationBar: BannerAdWidget(size: AdSize.banner),
     );
   }
 

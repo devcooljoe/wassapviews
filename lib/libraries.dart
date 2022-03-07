@@ -64,3 +64,4 @@ export 'package:wassapviews/widgets/homescreencard.dart';
 export 'package:wassapviews/widgets/customforminputs.dart';
 export 'package:wassapviews/widgets/loading.dart';
 export 'package:wassapviews/widgets/button.dart';
+export 'package:wassapviews/widgets/bannerads.dart';

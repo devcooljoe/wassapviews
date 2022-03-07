@@ -190,6 +190,7 @@ class RemoveContactScreen extends StatelessWidget {
           }),
         ],
       ),
+      bottomNavigationBar: BannerAdWidget(size: AdSize.banner),
     );
   }
 

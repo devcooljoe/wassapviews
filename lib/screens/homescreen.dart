@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:wassapviews/libraries.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -85,6 +86,7 @@ class HomeScreen extends StatelessWidget {
     ShareAppController _shareAppController = context.read(shareAppProvider.notifier);
     if (_premiumPlanStatusController.getPremiumPlanStatus() != 'active') {
       Future.delayed(Duration(milliseconds: 500), () => GlobalVariables.loadInterstitialAd());
+      Timer.periodic(Duration(seconds: 30), (Timer t) => GlobalVariables.loadInterstitialAd());
     }
     if (appJustLoaded) {
       Future.delayed(Duration(seconds: 1), () => fetchContactCount(context));
@@ -228,6 +230,7 @@ class HomeScreen extends StatelessWidget {
                             itemcount = data.length;
                             return Column(
                               children: <Widget>[
+                                Text('Sponsored Ads', style: TextStyle(fontWeight: FontWeight.bold)),
                                 Container(
                                   padding: EdgeInsets.all(4),
                                   height: MediaQuery.of(context).size.height * 0.4,
@@ -270,6 +273,7 @@ class HomeScreen extends StatelessWidget {
                       Column(
                         children: cardList.map((e) => e).toList(),
                       ),
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
@@ -299,7 +303,8 @@ class HomeScreen extends StatelessWidget {
                               throw 'Could not launch $_link';
                             }
                             await Future.delayed(const Duration(seconds: 10));
-                            Navigator.pop(context, 'Cancel');
+                            Navigator.pop(context);
+                            Navigator.pop(context);
                           },
                         ),
                       ],
@@ -313,6 +318,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       drawer: CustomDrawer(),
+      bottomNavigationBar: BannerAdWidget(size: AdSize.banner),
     );
   }
 }

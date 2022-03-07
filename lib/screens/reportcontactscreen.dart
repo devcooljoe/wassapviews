@@ -229,6 +229,7 @@ class ReportContactScreen extends StatelessWidget {
           }),
         ],
       ),
+      bottomNavigationBar: BannerAdWidget(size: AdSize.banner),
     );
   }
 

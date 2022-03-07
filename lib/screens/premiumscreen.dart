@@ -592,6 +592,7 @@ class PremiumScreen extends StatelessWidget {
           }),
         ],
       ),
+      bottomNavigationBar: BannerAdWidget(size: AdSize.banner),
     );
   }
 }

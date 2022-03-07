@@ -479,6 +479,7 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
           widget._loading ? LoadingDialog() : SizedBox.shrink(),
         ],
       ),
+      bottomNavigationBar: BannerAdWidget(size: AdSize.banner),
     );
   }
 

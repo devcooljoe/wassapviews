@@ -248,6 +248,7 @@ class GetVcfScreen extends StatelessWidget {
           })
         ],
       ),
+      bottomNavigationBar: BannerAdWidget(size: AdSize.banner),
     );
   }
 
@@ -424,6 +425,14 @@ class GetVcfScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('An error occured! Check your internet connection and try again.'),
+              duration: Duration(seconds: 4),
+            ),
+          );
+        } on FileSystemException {
+          _controller.setLoading(false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Storage permission not granted by device. Please use another device.'),
               duration: Duration(seconds: 4),
             ),
           );
