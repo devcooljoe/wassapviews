@@ -253,6 +253,7 @@ class GetVcfScreen extends StatelessWidget {
   }
 
   void _getVcfScreen(BuildContext context) async {
+    PremiumPlanStatusController _premiumPlanStatusController = context.read(premiumPlanStatusProvider.notifier);
     LoadingDialogController _controller = context.read(loadingDialogProvider.notifier);
     if (_validateForm()) {
       if (UserSharedPreferences.getUserPhoneNumber() == "" || UserSharedPreferences.getUserPhoneNumber() != _phoneNumber.phoneNumber) {
@@ -366,19 +367,24 @@ class GetVcfScreen extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
                   title: Text(
-                    UserSharedPreferences.getShared() == 'true' ? 'Not Available' : 'Share',
+                    (UserSharedPreferences.getShared() == 'true' || _premiumPlanStatusController.getPremiumPlanStatus() == 'active') ? 'Not Available' : 'Share',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  content: Text(UserSharedPreferences.getShared() == 'true' ? 'Come back later for more new VCF files.' : 'Click the \'SHARE NOW\' button to share our app link on your WhatsApp status and in 5 groups.'),
+                  content: Text((UserSharedPreferences.getShared() == 'true' || _premiumPlanStatusController.getPremiumPlanStatus() == 'active') ? 'Come back later for more new VCF files.' : 'Click the \'SHARE NOW\' button to share our app link on your WhatsApp status and in 5 groups.'),
                   actions: <Widget>[
-                    UserSharedPreferences.getShared() == 'true'
-                        ? SizedBox.shrink()
+                    (UserSharedPreferences.getShared() == 'true' || _premiumPlanStatusController.getPremiumPlanStatus() == 'active')
+                        ? CustomTextButton(
+                            text: 'Go Back',
+                            onPressed: () {
+                              Navigator.pop(context, 'Go Back');
+                            },
+                          )
                         : CustomTextButton(
                             text: 'SHARE NOW',
                             onPressed: () async {
                               UserSharedPreferences.setShared('true');
                               String _link =
-                                  "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                                  "whatsapp://send?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                               if (await canLaunch(_link)) {
                                 await launch(_link);
                               } else {
@@ -591,7 +597,7 @@ class GetVcfScreen extends StatelessWidget {
                         onPressed: () async {
                           UserSharedPreferences.setShared('true');
                           String _link =
-                              "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                              "whatsapp://send?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                           if (await canLaunch(_link)) {
                             await launch(_link);
                           } else {

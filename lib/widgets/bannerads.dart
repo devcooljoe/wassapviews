@@ -16,16 +16,19 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
       request: const AdRequest(),
       size: size,
       adUnitId: 'ca-app-pub-2125815836441893/6775990902',
-      listener: BannerAdListener(onAdLoaded: (_) {
-        setState(() {
-          widget.isAdLoaded = true;
-        });
-      }, onAdFailedToLoad: (Ad ad, LoadAdError loadError) {
-        setState(() {
-          widget.isAdLoaded = false;
-        });
-        ad.dispose();
-      }),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            widget.isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError loadError) {
+          setState(() {
+            widget.isAdLoaded = false;
+          });
+          ad.dispose();
+        },
+      ),
     );
     await banner.load();
     setState(() {

@@ -91,7 +91,10 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: const FaIcon(FontAwesomeIcons.addressCard, size: 20),
             title: const Text('Download Full Contacts'),
-            trailing: const FaIcon(FontAwesomeIcons.check, size: 15),
+            trailing: Text(
+              '~PRO',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GlobalVariables.isDarkMode() ? Colors.yellow : Colors.yellow.shade900),
+            ),
             onTap: () {
               Navigator.push(
                 context,
@@ -104,7 +107,10 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: const FaIcon(FontAwesomeIcons.trash, size: 20),
             title: Text('Delete Inactive Contacts'),
-            trailing: const FaIcon(FontAwesomeIcons.check, size: 15),
+            trailing: Text(
+              '~PRO',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GlobalVariables.isDarkMode() ? Colors.yellow : Colors.yellow.shade900),
+            ),
             onTap: () {
               Navigator.push(
                 context,

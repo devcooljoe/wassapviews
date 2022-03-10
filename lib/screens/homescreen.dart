@@ -281,7 +281,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Consumer(builder: (context, watch, widget) {
-            return (!(watch(shareAppProvider) as bool) && UserSharedPreferences.getUserPhoneNumber() != '')
+            return (!(watch(shareAppProvider) as bool) && (UserSharedPreferences.getUserPhoneNumber() != '') && (_premiumPlanStatusController.getPremiumPlanStatus() != 'active'))
                 ? Container(
                     color: AppColors.transparentBlack,
                     child: AlertDialog(
@@ -296,14 +296,12 @@ class HomeScreen extends StatelessWidget {
                           onPressed: () async {
                             _shareAppController.setShareApp(true);
                             String _link =
-                                "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                                "whatsapp://send?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                             if (await canLaunch(_link)) {
                               await launch(_link);
                             } else {
                               throw 'Could not launch $_link';
                             }
-                            await Future.delayed(const Duration(seconds: 10));
-                            Navigator.pop(context);
                           },
                         ),
                       ],
@@ -317,7 +315,9 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       drawer: CustomDrawer(),
-      bottomNavigationBar: BannerAdWidget(size: AdSize.banner),
+      bottomNavigationBar: Consumer(builder: (context, watch, widget) {
+        return (watch(premiumPlanStatusProvider) as String == 'active') ? SizedBox.shrink() : BannerAdWidget(size: AdSize.banner);
+      }),
     );
   }
 }
