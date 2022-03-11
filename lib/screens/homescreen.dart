@@ -239,7 +239,12 @@ class HomeScreen extends StatelessWidget {
                                     physics: BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
                                       return GestureDetector(
-                                        child: CachedNetworkImage(imageUrl: data[index]['image']!),
+                                        child: CachedNetworkImage(
+                                          imageUrl: data[index]['image']!,
+                                          placeholder: (context, str) {
+                                            return CircularProgressIndicator();
+                                          },
+                                        ),
                                         onTap: () async {
                                           String url = data[index]['link'];
                                           if (await canLaunch(url)) {
