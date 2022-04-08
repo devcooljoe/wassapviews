@@ -41,12 +41,12 @@ class Wassapviews extends StatelessWidget {
       try {
         if (Platform.isAndroid) {
           AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-          deviceName = androidInfo.model;
-          deviceID = androidInfo.androidId;
+          deviceName = androidInfo.model!;
+          deviceID = androidInfo.androidId!;
         } else if (Platform.isIOS) {
           IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-          deviceName = iosInfo.name;
-          deviceID = iosInfo.identifierForVendor;
+          deviceName = iosInfo.name!;
+          deviceID = iosInfo.identifierForVendor!;
         }
       } on PlatformException {
         debugPrint('Failed to get platform version');
@@ -61,10 +61,13 @@ class Wassapviews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _getDeviceInfo();
-    Timer.periodic(Duration(seconds: 2), (Timer t) => checkForInternetConnection(context));
+    Timer.periodic(
+        Duration(seconds: 2), (Timer t) => checkForInternetConnection(context));
     return MaterialApp(
       title: 'Wassapviews',
-      home: GlobalVariables.firstLaunch == 'true' ? OnboardScreen() : HomeScreen(),
+      home: GlobalVariables.firstLaunch == 'true'
+          ? OnboardScreen()
+          : HomeScreen(),
       theme: appTheme,
       darkTheme: appThemeDark,
       themeMode: GlobalVariables.generateThemeMode(),

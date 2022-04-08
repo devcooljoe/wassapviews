@@ -15,7 +15,7 @@ export 'package:intl_phone_number_input/intl_phone_number_input.dart';
 export 'package:pin_code_fields/pin_code_fields.dart';
 export 'package:permission_handler/permission_handler.dart';
 export 'package:http/http.dart';
-export 'package:device_info/device_info.dart';
+export 'package:device_info_plus/device_info_plus.dart';
 export 'package:flutter_native_splash/flutter_native_splash.dart';
 export 'package:open_file/open_file.dart';
 export 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -23,7 +23,7 @@ export 'package:in_app_update/in_app_update.dart';
 export 'package:in_app_purchase/in_app_purchase.dart';
 export 'package:firebase_auth/firebase_auth.dart';
 export 'package:firebase_core/firebase_core.dart';
-export 'package:flutter_contacts/flutter_contacts.dart';
+// export 'package:flutter_contacts/flutter_contacts.dart';
 export 'package:firebase_messaging/firebase_messaging.dart';
 
 // Screens

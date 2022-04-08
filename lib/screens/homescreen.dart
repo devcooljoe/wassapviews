@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:wassapviews/libraries.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -21,7 +19,7 @@ class HomeScreen extends StatelessWidget {
 
   Future _getStoragePermission() async {
     if (await Permission.storage.request().isGranted) {
-      await FlutterContacts.requestPermission();
+      // await FlutterContacts.requestPermission();
       return true;
     } else if (await Permission.storage.request().isPermanentlyDenied) {
       await openAppSettings();
@@ -86,7 +84,7 @@ class HomeScreen extends StatelessWidget {
     PremiumPlanStatusController _premiumPlanStatusController = context.read(premiumPlanStatusProvider.notifier);
     ShareAppController _shareAppController = context.read(shareAppProvider.notifier);
     if (_premiumPlanStatusController.getPremiumPlanStatus() != 'active') {
-      Future.delayed(Duration(milliseconds: 500), () => GlobalVariables.loadInterstitialAd());
+      Future.delayed(Duration(milliseconds: 1000), () => GlobalVariables.loadInterstitialAd());
       Timer.periodic(Duration(seconds: 60), (Timer t) => GlobalVariables.loadInterstitialAd());
     }
     if (appJustLoaded) {
@@ -226,6 +224,12 @@ class HomeScreen extends StatelessWidget {
                               height: MediaQuery.of(context).size.height * 0.4,
                               child: Image.asset('assets/images/phone.png'),
                             );
+                          } else if (snapshot.hasError) {
+                            return Container(
+                              padding: EdgeInsets.all(4),
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              child: Text('Failed to load Images.'),
+                            );
                           } else {
                             List<dynamic> data = jsonDecode(snapshot.data.toString())['data'];
                             itemcount = data.length;
@@ -242,7 +246,10 @@ class HomeScreen extends StatelessWidget {
                                         child: CachedNetworkImage(
                                           imageUrl: data[index]['image']!,
                                           placeholder: (context, str) {
-                                            return CircularProgressIndicator();
+                                            return Padding(
+                                              padding: EdgeInsets.all(100),
+                                              child: CircularProgressIndicator(color: Theme.of(context).accentColor),
+                                            );
                                           },
                                         ),
                                         onTap: () async {
@@ -300,8 +307,7 @@ class HomeScreen extends StatelessWidget {
                           text: 'SHARE NOW',
                           onPressed: () async {
                             _shareAppController.setShareApp(true);
-                            String _link =
-                                "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                            String _link = "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                             if (await canLaunch(_link)) {
                               await launch(_link);
                             } else {
