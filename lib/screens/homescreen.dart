@@ -1,19 +1,28 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:wassapviews/libraries.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
   static GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
 
-  dynamic getads() async {
+  dynamic getads(BuildContext context) async {
     var response = await get(
       Uri.parse('https://app.wassapviews.ng/api/getads'),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': authKey,
       },
-    );
+    ).timeout(Duration(seconds: 120), onTimeout: () {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occured while fetching ads.'),
+        ),
+      );
+      return Response('Error', 500);
+    });
     return response.body;
   }
 
@@ -49,6 +58,212 @@ class HomeScreen extends StatelessWidget {
   void showSnack(String text) {
     if (_scaffoldKey.currentContext != null) {
       ScaffoldMessenger.of(_scaffoldKey.currentContext!).showSnackBar(SnackBar(content: Text(text)));
+    }
+  }
+
+  void _showCustomDialog(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text(
+          'Join us on Telegram',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: const Text('Please join our official Telegram channel for more info, questions, updates, tutorial, etc.. .'),
+        actions: <Widget>[
+          CustomTextButton(
+            text: 'Join Us',
+            onPressed: () async {
+              await UserSharedPreferences.setRated('true');
+              String url = 'https://t.me/wassapviews';
+              if (await canLaunch(url)) {
+                await launch(url);
+              } else {
+                throw 'Could not launch $url';
+              }
+              Navigator.pop(context, 'Cancel');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void browserDownloadVCF(BuildContext context, String date) async {
+    LoadingDialogController _controller = context.read(loadingDialogProvider.notifier);
+    try {
+      _controller.setLoading(true);
+
+      final _response = await get(
+        Uri.parse('https://app.wassapviews.ng/api/getsinglevcf/$date'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authKey,
+        },
+      ).timeout(
+        const Duration(seconds: 60),
+        onTimeout: () {
+          _controller.setLoading(false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Connection timeout! Check your internet connection and try again.'),
+              duration: Duration(seconds: 4),
+            ),
+          );
+          return Response('Error', 500);
+        },
+      );
+      if (_response.statusCode == 200 || _response.statusCode == 201) {
+        dynamic _fetchedData = jsonDecode(_response.body);
+        if (_fetchedData['status'] == 'success') {
+          String _downloadPath = _fetchedData['data']['path'];
+
+          _controller.setLoading(false);
+          GlobalVariables.watchAd = false;
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text(
+                'Download VCF',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: const Text('VCF file has been requested completely. Click the \'Download VCF\' button to open your browser and download the VCF file.'),
+              actions: <Widget>[
+                CustomTextButton(
+                  text: 'Download VCF',
+                  onPressed: () async {
+                    if (await canLaunch(_downloadPath)) {
+                      await launch(_downloadPath);
+                    } else {
+                      throw 'Could not launch $_downloadPath';
+                    }
+                    Navigator.pop(context, 'Cancel');
+                    if (UserSharedPreferences.getRated() == 'false') {
+                      _showCustomDialog(context);
+                    }
+                  },
+                ),
+              ],
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                _fetchedData['message'],
+                style: TextStyle(
+                  color: Theme.of(context).buttonColor,
+                ),
+              ),
+              backgroundColor: Theme.of(context).backgroundColor,
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.fromLTRB(
+                50,
+                0,
+                50,
+                70,
+              ),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        } else if (_fetchedData['status'] == 'share') {
+          _controller.setLoading(false);
+          UserSharedPreferences.setShared('false');
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: Text(
+                UserSharedPreferences.getShared() == 'true' ? 'Not Available' : 'Share',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              content: Text(UserSharedPreferences.getShared() == 'true' ? 'Come back later for more new VCF files.' : 'Click the \'SHARE NOW\' button to share our app link on your WhatsApp status and in 5 groups.'),
+              actions: <Widget>[
+                UserSharedPreferences.getShared() == 'true'
+                    ? SizedBox.shrink()
+                    : CustomTextButton(
+                        text: 'SHARE NOW',
+                        onPressed: () async {
+                          UserSharedPreferences.setShared('true');
+                          String _link = "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                          if (await canLaunch(_link)) {
+                            await launch(_link);
+                          } else {
+                            throw 'Could not launch $_link';
+                          }
+                          await Future.delayed(const Duration(seconds: 10));
+                          Navigator.pop(context, 'Cancel');
+                        },
+                      ),
+              ],
+            ),
+          );
+        } else {
+          _controller.setLoading(false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                _fetchedData['message'],
+                style: const TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.fromLTRB(
+                50,
+                0,
+                50,
+                70,
+              ),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      } else {
+        _controller.setLoading(false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('An unexpected error occured. StatusCode: ${_response.statusCode}'),
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } on SocketException {
+      _controller.setLoading(false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An error occured! Check your internet connection and try again.'),
+          duration: Duration(seconds: 4),
+        ),
+      );
+    } on FileSystemException {
+      _controller.setLoading(false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Storage permission not granted by device. Please use another device.'),
+          duration: Duration(seconds: 4),
+        ),
+      );
+    } on PlatformException {
+      _controller.setLoading(false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('An error occured! Could not get the downloads directory.'),
+          duration: Duration(seconds: 4),
+        ),
+      );
+    } catch (e) {
+      _controller.setLoading(false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An unexpected error occured: $e'),
+          duration: const Duration(seconds: 4),
+        ),
+      );
     }
   }
 
@@ -216,7 +431,7 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       FutureBuilder(
-                        future: getads(),
+                        future: getads(context),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return Container(
@@ -231,60 +446,233 @@ class HomeScreen extends StatelessWidget {
                               child: Text('Failed to load Images.'),
                             );
                           } else {
-                            List<dynamic> data = jsonDecode(snapshot.data.toString())['data'];
-                            itemcount = data.length;
-                            return Column(
-                              children: <Widget>[
-                                Text('Sponsored Ads', style: TextStyle(fontWeight: FontWeight.bold)),
-                                Container(
-                                  padding: EdgeInsets.all(4),
-                                  height: MediaQuery.of(context).size.height * 0.4,
-                                  child: PageView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      return GestureDetector(
-                                        child: CachedNetworkImage(
-                                          imageUrl: data[index]['image']!,
-                                          placeholder: (context, str) {
-                                            return Padding(
-                                              padding: EdgeInsets.all(100),
-                                              child: CircularProgressIndicator(color: Theme.of(context).accentColor),
-                                            );
+                            try {
+                              List<dynamic> data = jsonDecode(snapshot.data.toString())['data'];
+                              itemcount = data.length;
+                              return Column(
+                                children: <Widget>[
+                                  Text('Sponsored Ads', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  Container(
+                                    padding: EdgeInsets.all(4),
+                                    height: MediaQuery.of(context).size.height * 0.4,
+                                    child: PageView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        return GestureDetector(
+                                          child: CachedNetworkImage(
+                                            imageUrl: data[index]['image']!,
+                                            placeholder: (context, str) {
+                                              return Padding(
+                                                padding: EdgeInsets.all(100),
+                                                child: CircularProgressIndicator(color: Theme.of(context).accentColor),
+                                              );
+                                            },
+                                          ),
+                                          onTap: () async {
+                                            String url = data[index]['link'];
+                                            if (await canLaunch(url)) {
+                                              await launch(url);
+                                            } else {
+                                              throw 'Could not launch $url';
+                                            }
                                           },
-                                        ),
-                                        onTap: () async {
-                                          String url = data[index]['link'];
-                                          if (await canLaunch(url)) {
-                                            await launch(url);
-                                          } else {
-                                            throw 'Could not launch $url';
-                                          }
-                                        },
-                                      );
-                                    },
-                                    itemCount: data.length,
+                                        );
+                                      },
+                                      itemCount: data.length,
+                                      controller: pageController,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  SmoothPageIndicator(
                                     controller: pageController,
+                                    count: data.length,
+                                    effect: WormEffect(
+                                      dotHeight: 5,
+                                      dotWidth: 5,
+                                      dotColor: GlobalVariables.isDarkMode() ? AppColors.grey4 : AppColors.grey2,
+                                      activeDotColor: Theme.of(context).accentColor,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 10),
-                                SmoothPageIndicator(
-                                  controller: pageController,
-                                  count: data.length,
-                                  effect: WormEffect(
-                                    dotHeight: 5,
-                                    dotWidth: 5,
-                                    dotColor: GlobalVariables.isDarkMode() ? AppColors.grey4 : AppColors.grey2,
-                                    activeDotColor: Theme.of(context).accentColor,
-                                  ),
-                                ),
-                              ],
-                            );
+                                ],
+                              );
+                            } catch (e) {
+                              return Container(
+                                padding: EdgeInsets.all(4),
+                                height: MediaQuery.of(context).size.height * 0.4,
+                                child: Text('Failed to load Images.'),
+                              );
+                            }
                           }
                         },
                       ),
                       const SizedBox(height: 10),
                       Column(
                         children: cardList.map((e) => e).toList(),
+                      ),
+                      const SizedBox(height: 20),
+                      Divider(),
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                FaIcon(FontAwesomeIcons.list, size: 28),
+                                SizedBox(width: 15),
+                                Text(
+                                  'Download List',
+                                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(width: 15),
+                                Text(
+                                  '~PRO',
+                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GlobalVariables.isDarkMode() ? Colors.yellow : Colors.yellow.shade900),
+                                )
+                              ],
+                            ),
+                            Text(
+                              'Here is a list of previously compiled vCards files for premium users to download.',
+                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                            ),
+                            SizedBox(height: 30),
+                            ListView.builder(
+                              itemCount: 10,
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemBuilder: (context, int) {
+                                final DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day - (int + 1));
+                                final DateFormat formatter = DateFormat('d MMM, y');
+                                String date = formatter.format(now);
+                                String year = now.year.toString();
+                                String month = now.month.toString().padLeft(2, '0');
+                                String day = now.day.toString().padLeft(2, '0');
+                                String date2 = '$year-$month-$day';
+                                return Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      PremiumPlanStatusController _premiumPlanStatusController = context.read(premiumPlanStatusProvider.notifier);
+                                      if (_premiumPlanStatusController.getPremiumPlanStatus() == 'active') {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('Join Premium Plan'),
+                                                content: Text('Join our premium plan to access this file.'),
+                                                actions: [
+                                                  CustomTextButton(
+                                                      text: 'OK',
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) {
+                                                          return GoPremiumScreen();
+                                                        }));
+                                                      }),
+                                                ],
+                                              );
+                                            });
+                                      } else {
+                                        browserDownloadVCF(context, date2);
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          left: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
+                                          top: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
+                                          right: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
+                                          bottom: int == 9 ? BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid) : BorderSide.none,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          FaIcon(FontAwesomeIcons.addressCard, size: 21, color: Theme.of(context).accentColor),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            'vCard for $date',
+                                            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500, color: Theme.of(context).accentColor),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        child: Column(
+                          children: [
+                            InkWell(
+                              onTap: () async {
+                                String _l = "https://wassapviews.ng/tv/signup";
+                                if (await canLaunch(_l)) {
+                                  await launch(_l);
+                                } else {
+                                  throw 'Could not launch $_l';
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).accentColor,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  'VERIFY & PLACE YOUR \n WHATSAPP TV ON WASSAPVIEWS \n ₦5,000/Month',
+                                  style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '✔ Gain the trust of your customers.',
+                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                                  ),
+                                  Text(
+                                    '✔ Get our users to trust you.',
+                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                                  ),
+                                  Text(
+                                    '✔ Boost your sale 100% assured.',
+                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                                  ),
+                                  Text(
+                                    '✔ Get your personal WhatsApp TV link on Wassapviews.',
+                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    'NOTE:',
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).shadowColor),
+                                  ),
+                                  Text(
+                                    '• You must be a trusted Tv therefore you must upload a non-edited and raw video proof of your Status Views Count.',
+                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                                  ),
+                                  Text(
+                                    '• You will also be tested before you will be approved.',
+                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                                  ),
+                                  Text(
+                                    '• There is no refund.',
+                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -322,6 +710,9 @@ class HomeScreen extends StatelessWidget {
           }),
           Consumer(builder: (context, watch, widget) {
             return (watch(internetProvider) as bool) ? SizedBox.shrink() : InternetDialog();
+          }),
+          Consumer(builder: (context, watch, widget) {
+            return (watch(loadingDialogProvider) as bool) ? LoadingDialog() : SizedBox.shrink();
           }),
         ],
       ),

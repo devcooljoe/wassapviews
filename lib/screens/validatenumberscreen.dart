@@ -25,7 +25,8 @@ class ValidateNumberScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     OtpSentController _otpController = context.read(otpSentProvider.notifier);
     if (_otpController.getSent() == false) {
-      Future.delayed(Duration(milliseconds: 500), () => _sendOTP(context, phoneNumber.phoneNumber!));
+      // Future.delayed(Duration(milliseconds: 500), () => _sendOTP(context, phoneNumber.phoneNumber!));
+      Future.delayed(Duration(milliseconds: 500), () => _completeVerify(context));
     }
 
     return Scaffold(

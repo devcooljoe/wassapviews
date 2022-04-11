@@ -409,17 +409,47 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
                           children: [
                             SizedBox(
                               width: double.infinity,
-                              child: Consumer(
-                                builder: (context, watch, widget) {
-                                  return Text(
-                                    appLang[watch(langProvider) as String]![43],
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Opacity(
+                                    opacity: 0,
+                                    child: Container(
+                                      child: Text('Active'),
                                     ),
-                                    textAlign: TextAlign.center,
-                                  );
-                                },
+                                  ),
+                                  Consumer(
+                                    builder: (context, watch, widget) {
+                                      return Text(
+                                        appLang[watch(langProvider) as String]![43],
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      );
+                                    },
+                                  ),
+                                  Consumer(builder: (context, watch, widget) {
+                                    return (watch(premiumPlanStatusProvider) as String) == 'active'
+                                        ? Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                                            child: Text('Active', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).accentColor,
+                                              borderRadius: BorderRadius.circular(7),
+                                            ),
+                                          )
+                                        : Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                                            child: Text('Not Active', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                                            decoration: BoxDecoration(
+                                              color: Colors.amber,
+                                              borderRadius: BorderRadius.circular(7),
+                                            ),
+                                          );
+                                  }),
+                                ],
                               ),
                             ),
                             Divider(),
