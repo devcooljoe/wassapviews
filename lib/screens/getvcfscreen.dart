@@ -397,6 +397,29 @@ class GetVcfScreen extends StatelessWidget {
                   ],
                 ),
               );
+            } else if (_fetchedData['status'] == 'submit') {
+              _controller.setLoading(false);
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text(
+                    'Submit your Contact First',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  content: Text('You have not submitted your number. Tap the submit contact button below to submit your contact.'),
+                  actions: <Widget>[
+                    CustomTextButton(
+                        text: 'Submit Contact',
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) {
+                            return SubmitContactScreen();
+                          }));
+                        }),
+                  ],
+                ),
+              );
             } else {
               _controller.setLoading(false);
               ScaffoldMessenger.of(context).showSnackBar(

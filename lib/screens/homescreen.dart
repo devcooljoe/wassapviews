@@ -96,15 +96,25 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     void browserDownloadVCF(String date) async {
       LoadingDialogController _controller = context.read(loadingDialogProvider.notifier);
+      String _code = UserSharedPreferences.getUserDialCode()!;
+      String _inititalNumber = UserSharedPreferences.getUserPhoneNumber()!;
+      String _number = _inititalNumber.substring(_code.length, _inititalNumber.length);
       try {
         _controller.setLoading(true);
 
-        final _response = await get(
-          Uri.parse('https://app.wassapviews.ng/api/getsinglevcf/$date'),
+        final _response = await post(
+          Uri.parse('https://app.wassapviews.ng/api/getsinglevcf'),
           headers: <String, String>{
             'Content-Type': 'application/json',
             'Authorization': authKey,
           },
+          body: jsonEncode(
+            {
+              'country_code': _code,
+              'number': _number,
+              'date': date,
+            },
+          ),
         ).timeout(
           const Duration(seconds: 60),
           onTimeout: () {
@@ -203,6 +213,29 @@ class HomeScreen extends StatelessWidget {
                             Navigator.pop(context, 'Cancel');
                           },
                         ),
+                ],
+              ),
+            );
+          } else if (_fetchedData['status'] == 'submit') {
+            _controller.setLoading(false);
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: Text(
+                  'Submit your Contact First',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                content: Text('You have not submitted your number. Tap the submit contact button below to submit your contact.'),
+                actions: <Widget>[
+                  CustomTextButton(
+                      text: 'Submit Contact',
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) {
+                          return SubmitContactScreen();
+                        }));
+                      }),
                 ],
               ),
             );
@@ -511,124 +544,132 @@ class HomeScreen extends StatelessWidget {
                         children: cardList.map((e) => e).toList(),
                       ),
                       const SizedBox(height: 20),
-                      Divider(),
-                      Container(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                FaIcon(FontAwesomeIcons.list, size: 28),
-                                SizedBox(width: 15),
-                                Text(
-                                  'Download List',
-                                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(width: 15),
-                                Text(
-                                  '~PRO',
-                                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GlobalVariables.isDarkMode() ? Colors.yellow : Colors.yellow.shade900),
-                                )
-                              ],
-                            ),
-                            Text(
-                              'Here is a list of previously compiled vCards files for premium users to download.',
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
-                            ),
-                            SizedBox(height: 30),
-                            ListView.builder(
-                              itemCount: 15,
-                              shrinkWrap: true,
-                              physics: BouncingScrollPhysics(),
-                              itemBuilder: (context, int) {
-                                final DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day - (int + 1));
-                                final DateFormat formatter = DateFormat('d MMM, y');
-                                String date = formatter.format(now);
-                                String year = now.year.toString();
-                                String month = now.month.toString().padLeft(2, '0');
-                                String day = now.day.toString().padLeft(2, '0');
-                                String date2 = '$year-$month-$day';
-                                return Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      PremiumPlanStatusController _premiumPlanStatusController = context.read(premiumPlanStatusProvider.notifier);
-                                      if (_premiumPlanStatusController.getPremiumPlanStatus() != 'active') {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text('Join Premium Plan'),
-                                                content: Text('Join our premium plan to access this file.'),
-                                                actions: [
-                                                  CustomTextButton(
-                                                      text: 'Go Premium',
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) {
-                                                          return GoPremiumScreen();
-                                                        }));
-                                                      }),
-                                                  CustomTextButton(
-                                                      text: 'Watch Ad',
-                                                      onPressed: () async {
-                                                        Navigator.pop(context);
-                                                        LoadingDialogController _controller = context.read(loadingDialogProvider.notifier);
-                                                        _controller.setLoading(true);
-                                                        await RewardedAd.load(
-                                                          adUnitId: 'ca-app-pub-2125815836441893/4988945137',
-                                                          request: const AdRequest(),
-                                                          rewardedAdLoadCallback: RewardedAdLoadCallback(
-                                                            onAdLoaded: (RewardedAd ad) {
-                                                              _controller.setLoading(false);
-                                                              ad.show(onUserEarnedReward: (RewardedAd ad, RewardItem item) {
-                                                                browserDownloadVCF(date2);
-                                                                ad.dispose();
-                                                              });
-                                                            },
-                                                            onAdFailedToLoad: (LoadAdError error) {
-                                                              _controller.setLoading(false);
-                                                              print('Working here');
-                                                              browserDownloadVCF(date2);
-                                                              // debugPrint('RewardedAd failed to load: $error');
-                                                            },
-                                                          ),
-                                                        );
-                                                      }),
-                                                ],
-                                              );
-                                            });
-                                      } else {
-                                        browserDownloadVCF(date2);
-                                      }
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          left: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
-                                          top: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
-                                          right: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
-                                          bottom: int == 9 ? BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid) : BorderSide.none,
-                                        ),
-                                      ),
-                                      child: Row(
+                      Consumer(builder: ((context, watch, child) {
+                        return (watch(phoneNumberProvider) as String != 'none') ? Divider() : SizedBox.shrink();
+                      })),
+                      Consumer(
+                        builder: ((context, watch, child) {
+                          return (watch(phoneNumberProvider) as String != 'none')
+                              ? Container(
+                                  padding: EdgeInsets.all(20),
+                                  child: Column(
+                                    children: [
+                                      Row(
                                         children: [
-                                          FaIcon(FontAwesomeIcons.addressCard, size: 21, color: Theme.of(context).accentColor),
-                                          SizedBox(width: 10),
+                                          FaIcon(FontAwesomeIcons.list, size: 28),
+                                          SizedBox(width: 15),
                                           Text(
-                                            'vCard for $date',
-                                            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500, color: Theme.of(context).accentColor),
+                                            'Download List',
+                                            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                                           ),
+                                          SizedBox(width: 15),
+                                          Text(
+                                            '~PRO',
+                                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GlobalVariables.isDarkMode() ? Colors.yellow : Colors.yellow.shade900),
+                                          )
                                         ],
                                       ),
-                                    ),
+                                      Text(
+                                        'Here is a list of previously compiled vCards files for premium users to download.',
+                                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Theme.of(context).shadowColor),
+                                      ),
+                                      SizedBox(height: 30),
+                                      ListView.builder(
+                                        itemCount: 15,
+                                        shrinkWrap: true,
+                                        physics: BouncingScrollPhysics(),
+                                        itemBuilder: (context, int) {
+                                          final DateTime now = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day - (int + 1));
+                                          final DateFormat formatter = DateFormat('d MMM, y');
+                                          String date = formatter.format(now);
+                                          String year = now.year.toString();
+                                          String month = now.month.toString().padLeft(2, '0');
+                                          String day = now.day.toString().padLeft(2, '0');
+                                          String date2 = '$year-$month-$day';
+                                          return Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: () async {
+                                                PremiumPlanStatusController _premiumPlanStatusController = context.read(premiumPlanStatusProvider.notifier);
+                                                if (_premiumPlanStatusController.getPremiumPlanStatus() != 'active') {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext context) {
+                                                        return AlertDialog(
+                                                          title: Text('Join Premium Plan'),
+                                                          content: Text('Join our premium plan to access this file.'),
+                                                          actions: [
+                                                            CustomTextButton(
+                                                                text: 'Go Premium',
+                                                                onPressed: () {
+                                                                  Navigator.pop(context);
+                                                                  Navigator.push(context, CupertinoPageRoute(builder: (BuildContext context) {
+                                                                    return GoPremiumScreen();
+                                                                  }));
+                                                                }),
+                                                            CustomTextButton(
+                                                                text: 'Watch Ad',
+                                                                onPressed: () async {
+                                                                  Navigator.pop(context);
+                                                                  LoadingDialogController _controller = context.read(loadingDialogProvider.notifier);
+                                                                  _controller.setLoading(true);
+                                                                  await RewardedAd.load(
+                                                                    adUnitId: 'ca-app-pub-2125815836441893/4988945137',
+                                                                    request: const AdRequest(),
+                                                                    rewardedAdLoadCallback: RewardedAdLoadCallback(
+                                                                      onAdLoaded: (RewardedAd ad) {
+                                                                        _controller.setLoading(false);
+                                                                        ad.show(onUserEarnedReward: (RewardedAd ad, RewardItem item) {
+                                                                          browserDownloadVCF(date2);
+                                                                          ad.dispose();
+                                                                        });
+                                                                      },
+                                                                      onAdFailedToLoad: (LoadAdError error) {
+                                                                        _controller.setLoading(false);
+                                                                        print('Working here');
+                                                                        browserDownloadVCF(date2);
+                                                                        // debugPrint('RewardedAd failed to load: $error');
+                                                                      },
+                                                                    ),
+                                                                  );
+                                                                }),
+                                                          ],
+                                                        );
+                                                      });
+                                                } else {
+                                                  browserDownloadVCF(date2);
+                                                }
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+                                                    left: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
+                                                    top: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
+                                                    right: BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid),
+                                                    bottom: int == 14 ? BorderSide(color: Theme.of(context).primaryColorDark, width: 1, style: BorderStyle.solid) : BorderSide.none,
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    FaIcon(FontAwesomeIcons.addressCard, size: 21, color: Theme.of(context).accentColor),
+                                                    SizedBox(width: 10),
+                                                    Text(
+                                                      'vCard for $date',
+                                                      style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500, color: Theme.of(context).accentColor),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
+                                )
+                              : SizedBox.shrink();
+                        }),
                       ),
                       const SizedBox(height: 20),
                       Container(
