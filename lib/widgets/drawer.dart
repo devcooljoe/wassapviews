@@ -227,10 +227,22 @@ class CustomDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.code),
-            title: Text('Get a Website/App Developer'),
+            leading: const Icon(Icons.more),
+            title: Text('Buy cheap Data & Airtime.'),
             onTap: () async {
-              String url = 'mailto:onipedejoseph2018@gmail.com';
+              String url = 'http://darads.com/dataairtimeAds';
+              if (await canLaunch(url)) {
+                await launch(url);
+              } else {
+                throw 'Could not launch $url';
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.code),
+            title: Text('Meet the App Developer'),
+            onTap: () async {
+              String url = 'https://wa.me/%2B2348105902536';
               if (await canLaunch(url)) {
                 await launch(url);
               } else {

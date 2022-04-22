@@ -116,7 +116,8 @@ class PremiumScreen extends StatelessWidget {
                           text: 'SHARE NOW',
                           onPressed: () async {
                             UserSharedPreferences.setShared('true');
-                            String _link = "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                            String _link =
+                                "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                             if (await canLaunch(_link)) {
                               await launch(_link);
                             } else {
@@ -415,7 +416,8 @@ class PremiumScreen extends StatelessWidget {
                       bottomRight: Radius.circular(10.0),
                     ),
                   ),
-                  child: Column(
+                  child: ListView(
+                    physics: BouncingScrollPhysics(),
                     children: [
                       SizedBox(height: 20),
                       Padding(
@@ -554,6 +556,84 @@ class PremiumScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(top: 40),
+                        // height: 70,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        child: Text(
+                          'List of 2K VCF Files for You.',
+                          style: TextStyle(
+                            color: GlobalVariables.isDarkMode() ? AppColors.white : AppColors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: GridView.builder(
+                              padding: EdgeInsets.all(10),
+                              physics: BouncingScrollPhysics(),
+                              itemCount: 6,
+                              shrinkWrap: true,
+                              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200, crossAxisSpacing: 30, mainAxisSpacing: 30),
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Coming Soon!'),
+                                            content: Text('Please be patient this feature is coming soon!'),
+                                            actions: [
+                                              CustomTextButton(
+                                                  text: 'OK',
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  })
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: GlobalVariables.isDarkMode() ? Color(0xFFFFFFFF) : Color(0xFFECFFF1),
+                                      boxShadow: GlobalVariables.isDarkMode() ? null : [BoxShadow(color: Colors.grey, offset: Offset.zero, blurRadius: 4, spreadRadius: 1)],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        FaIcon(FontAwesomeIcons.addressCard, size: 30, color: Theme.of(context).accentColor),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          'Coming Soon!',
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Theme.of(context).accentColor),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          '2K Contacts',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                        SizedBox(height: 5),
+                                        FaIcon(FontAwesomeIcons.download, size: 20, color: Colors.grey),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
+                      SizedBox(height: 200),
                     ],
                   ),
                 ),
@@ -705,7 +785,8 @@ class PremiumScreen extends StatelessWidget {
                         text: 'SHARE NOW',
                         onPressed: () async {
                           UserSharedPreferences.setShared('true');
-                          String _link = "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                          String _link =
+                              "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                           if (await canLaunch(_link)) {
                             await launch(_link);
                           } else {
