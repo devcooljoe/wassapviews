@@ -230,6 +230,13 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
                             ),
                             TableRow(
                               children: [
+                                Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Text('2K Paginated VCF Files')),
+                                Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Icon(Icons.close, color: Colors.red, size: 20)),
+                                Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Icon(Icons.check, color: Colors.green, size: 20)),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
                                 Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Text('Stop asking you to share App')),
                                 Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Icon(Icons.close, color: Colors.red, size: 20)),
                                 Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Icon(Icons.check, color: Colors.green, size: 20)),
