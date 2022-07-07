@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutterwave/flutterwave.dart';
+import 'package:flutterwave/models/responses/charge_response.dart';
 import 'package:wassapviews/libraries.dart';
 
 class GoPremiumScreen extends StatefulWidget {
@@ -646,8 +648,34 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
   }
 
   void _buyProduct(int index) {
-    final PurchaseParam purchaseParam = PurchaseParam(productDetails: productDetails![index]);
-    InAppPurchase.instance.buyConsumable(purchaseParam: purchaseParam);
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Choose Payment Method'),
+            content: Text('Please select your payment method below. If you are in Nigeria it is advisable to pay with Flutterwave.'),
+            actions: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomTextButton(
+                      text: 'Pay with Flutterwave',
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _makeFlutterwavePayment(index);
+                      }),
+                  CustomTextButton(
+                      text: 'Pay with Google Play',
+                      onPressed: () {
+                        Navigator.pop(context);
+                        final PurchaseParam purchaseParam = PurchaseParam(productDetails: productDetails![index]);
+                        InAppPurchase.instance.buyConsumable(purchaseParam: purchaseParam);
+                      }),
+                ],
+              )
+            ],
+          );
+        });
   }
 
   void _activatePremuimPlan() async {
@@ -766,5 +794,75 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
         ),
       );
     }
+  }
+
+  void _handlePaymentInitialization(String amount) async {
+    setState(() {
+      widget._loading = true;
+    });
+    final flutterwave = Flutterwave.forUIPayment(
+      amount: amount,
+      currency: 'NGN',
+      context: this.context,
+      publicKey: 'FLWPUBK_TEST-4f8843e8404bfad8148907a4ebbb7592-X',
+      encryptionKey: 'FLWSECK_TEST0bc588a55b6c',
+      email: "user@email.com",
+      fullName: "Wassapviews App User",
+      txRef: DateTime.now().toIso8601String(),
+      narration: "Upgrade to Premium",
+      isDebugMode: true,
+      phoneNumber: UserSharedPreferences.getUserPhoneNumber()!,
+      acceptAccountPayment: true,
+      acceptCardPayment: true,
+      acceptUSSDPayment: true,
+      acceptBankTransfer: true,
+    );
+    final response = await flutterwave.initializeForUiPayments();
+    setState(() {
+      widget._loading = false;
+    });
+    if (response != null) {
+      if (response.toJson()['data']['status'] == 'successful') {
+        UserSharedPreferences.setPaidPlan(_plan);
+        _activatePremuimPlan();
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('An error occurred!'),
+            actions: [
+              CustomTextButton(
+                text: 'OK',
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Transaction cancelled!'),
+          actions: [
+            CustomTextButton(
+              text: 'OK',
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  void _makeFlutterwavePayment(int index) {
+    String _amount = index == 0 ? '1500' : '10000';
+    this._handlePaymentInitialization(_amount);
   }
 }

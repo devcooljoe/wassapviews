@@ -1,7 +1,6 @@
 import 'package:wassapviews/libraries.dart';
 
-String authKey =
-    'Bearer 3Du9FOEZy3JWkwTmromCggcWcSKx9OuIqeHk71j0TCYYvAv31wOYrAlXYkqC3FLq';
+String authKey = 'Bearer 3Du9FOEZy3JWkwTmromCggcWcSKx9OuIqeHk71j0TCYYvAv31wOYrAlXYkqC3FLq';
 bool appJustLoaded = true;
 String deviceName = UserSharedPreferences.getDeviceName();
 String deviceID = UserSharedPreferences.getDeviceID();
@@ -57,10 +56,8 @@ class GlobalVariables {
   }
 
   static bool isDarkMode() {
-    Brightness _brightness =
-        SchedulerBinding.instance!.window.platformBrightness;
-    if (theme == 'dark' ||
-        (theme == 'system' && _brightness == Brightness.dark)) {
+    Brightness _brightness = SchedulerBinding.instance.window.platformBrightness;
+    if (theme == 'dark' || (theme == 'system' && _brightness == Brightness.dark)) {
       return true;
     } else {
       return false;
@@ -83,8 +80,7 @@ class GlobalVariables {
             onAdDismissedFullScreenContent: (InterstitialAd ad) {
               ad.dispose();
             },
-            onAdFailedToShowFullScreenContent:
-                (InterstitialAd ad, AdError error) {
+            onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
               ad.dispose();
             },
           );
