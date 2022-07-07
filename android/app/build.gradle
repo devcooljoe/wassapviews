@@ -29,9 +29,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     lintOptions {
         abortOnError false
-        disable 'InvalidPackage'
     }
-    
     compileSdkVersion 33
 
     compileOptions {
@@ -50,7 +48,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.dartechlabs.wassapviews"
-        minSdkVersion 23
+        minSdkVersion 19
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
