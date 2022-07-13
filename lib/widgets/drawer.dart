@@ -23,7 +23,9 @@ class CustomDrawer extends StatelessWidget {
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.27,
                   width: double.infinity,
-                  color: GlobalVariables.isDarkMode() ? AppColors.black : AppColors.lightModeGreen,
+                  color: GlobalVariables.isDarkMode()
+                      ? AppColors.black
+                      : AppColors.lightModeGreen,
                 ),
               ),
               Positioned(
@@ -52,8 +54,8 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Learn how to use this app'),
             onTap: () async {
               String url = 'https://www.youtube.com/watch?v=fiIu4c1gfx8';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -93,7 +95,12 @@ class CustomDrawer extends StatelessWidget {
             title: const Text('Download Full Contacts'),
             trailing: Text(
               '~PRO',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GlobalVariables.isDarkMode() ? Colors.yellow : Colors.yellow.shade900),
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: GlobalVariables.isDarkMode()
+                      ? Colors.yellow
+                      : Colors.yellow.shade900),
             ),
             onTap: () {
               Navigator.push(
@@ -109,7 +116,12 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Delete Inactive Contacts'),
             trailing: Text(
               '~PRO',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: GlobalVariables.isDarkMode() ? Colors.yellow : Colors.yellow.shade900),
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: GlobalVariables.isDarkMode()
+                      ? Colors.yellow
+                      : Colors.yellow.shade900),
             ),
             onTap: () {
               Navigator.push(
@@ -142,8 +154,8 @@ class CustomDrawer extends StatelessWidget {
             }),
             onTap: () async {
               String url = 'https://t.me/wassapviews';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -155,9 +167,10 @@ class CustomDrawer extends StatelessWidget {
               return Text(appLang[watch(langProvider) as String]![13]);
             }),
             onTap: () async {
-              String url = 'https://play.google.com/store/apps/details?id=com.dartechlabs.wassapviews';
-              if (await canLaunch(url)) {
-                await launch(url);
+              String url =
+                  'https://play.google.com/store/apps/details?id=com.dartechlabs.wassapviews';
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -170,8 +183,8 @@ class CustomDrawer extends StatelessWidget {
             }),
             onTap: () async {
               String url = 'https://wassapviews.ng/terms-and-conditions.pdf';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -183,8 +196,8 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Boost Social Media Followers'),
             onTap: () async {
               String url = 'https://thefastestboost.com';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -195,8 +208,8 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Get More WhatsApp Views'),
             onTap: () async {
               String url = 'https://wassapviews.ng';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -207,8 +220,8 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Get Your Google Voice Number'),
             onTap: () async {
               String url = 'https://darads.com/gpricelist';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -219,8 +232,8 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Place Your Viral Ads'),
             onTap: () async {
               String url = 'https://darads.com';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -231,8 +244,8 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Buy cheap Data & Airtime.'),
             onTap: () async {
               String url = 'http://darads.com/dataairtimeAds';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -243,8 +256,8 @@ class CustomDrawer extends StatelessWidget {
             title: Text('Meet the App Developer'),
             onTap: () async {
               String url = 'https://wa.me/%2B2348105902536';
-              if (await canLaunch(url)) {
-                await launch(url);
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -317,7 +330,8 @@ class CustomDrawer extends StatelessWidget {
                 onChanged: (String? newValue) async {
                   if (newValue != null) {
                     _dropDownValue = newValue;
-                    LangController _langController = context.read(langProvider.notifier);
+                    LangController _langController =
+                        context.read(langProvider.notifier);
                     _langController.setLang(newValue);
                     await UserSharedPreferences.setLanguage(newValue);
                   }
@@ -334,7 +348,8 @@ class CustomDrawer extends StatelessWidget {
           Center(
             child: Consumer(
               builder: (context, watch, widget) {
-                return Text('${appLang[watch(langProvider) as String]![19]} $deviceName');
+                return Text(
+                    '${appLang[watch(langProvider) as String]![19]} $deviceName');
               },
             ),
           ),

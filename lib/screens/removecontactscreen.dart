@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wassapviews/libraries.dart';
+import 'package:wassapviews/widgets/others.dart';
 
 class RemoveContactScreen extends StatelessWidget {
   RemoveContactScreen({Key? key}) : super(key: key);
@@ -21,50 +22,7 @@ class RemoveContactScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Consumer(
-          builder: (context, watch, widget) {
-            return (watch(premiumPlanStatusProvider) as String) == 'active'
-                ? RichText(
-                    text: TextSpan(
-                      text: 'Premium',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Plan',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                : RichText(
-                    text: TextSpan(
-                      text: 'Wassap',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Views',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-          },
-        ),
-        elevation: 0,
+        title: AppTitleName(),
       ),
       body: Stack(
         alignment: Alignment.topCenter,

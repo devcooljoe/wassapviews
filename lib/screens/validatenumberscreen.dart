@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:wassapviews/libraries.dart';
+import 'package:wassapviews/utils/methods.dart';
 
 class ValidateNumberScreen extends StatelessWidget {
   PhoneNumber phoneNumber;
@@ -333,7 +333,7 @@ class ValidateNumberScreen extends StatelessWidget {
     UserSharedPreferences.setUserPhoneNumber(phoneNumber.phoneNumber!);
     PhoneNumberController _phoneNumberController = context.read(phoneNumberProvider.notifier);
     _phoneNumberController.setPhoneNumber(phoneNumber.phoneNumber!);
-    checkPremiumPlanStatus(context);
+    Methods.checkPremiumPlanStatus(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

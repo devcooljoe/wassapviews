@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterwave/flutterwave.dart';
-import 'package:flutterwave/models/responses/charge_response.dart';
 import 'package:wassapviews/libraries.dart';
+import 'package:wassapviews/widgets/others.dart';
 
 class GoPremiumScreen extends StatefulWidget {
   bool _loading = true;
@@ -37,49 +37,7 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Consumer(
-          builder: (context, watch, widget) {
-            return (watch(premiumPlanStatusProvider) as String) == 'active'
-                ? RichText(
-                    text: TextSpan(
-                      text: 'Premium',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Plan',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                : RichText(
-                    text: TextSpan(
-                      text: 'Wassap',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Views',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-          },
-        ),
+        title: AppTitleName(),
         elevation: 0,
       ),
       body: Stack(
@@ -220,6 +178,13 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
                               children: [
                                 Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Text('Download Daily VCF')),
                                 Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Icon(Icons.check, color: Colors.green, size: 20)),
+                                Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Icon(Icons.check, color: Colors.green, size: 20)),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Text('More than 50 contacts/day')),
+                                Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Icon(Icons.close, color: Colors.red, size: 20)),
                                 Padding(padding: EdgeInsets.only(top: 5, bottom: 5), child: Icon(Icons.check, color: Colors.green, size: 20)),
                               ],
                             ),
@@ -804,13 +769,13 @@ class _GoPremiumScreenState extends State<GoPremiumScreen> {
       amount: amount,
       currency: 'NGN',
       context: this.context,
-      publicKey: 'FLWPUBK_TEST-4f8843e8404bfad8148907a4ebbb7592-X',
-      encryptionKey: 'FLWSECK_TEST0bc588a55b6c',
+      publicKey: 'FLWPUBK-6b8445f2d2dcfadc3d991690e9a682c2-X',
+      encryptionKey: 'c2e8fd35782d962d9bc0e67e',
       email: "user@email.com",
       fullName: "Wassapviews App User",
       txRef: DateTime.now().toIso8601String(),
       narration: "Upgrade to Premium",
-      isDebugMode: true,
+      isDebugMode: false,
       phoneNumber: UserSharedPreferences.getUserPhoneNumber()!,
       acceptAccountPayment: true,
       acceptCardPayment: true,

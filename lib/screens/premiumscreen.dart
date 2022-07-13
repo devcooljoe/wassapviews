@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:wassapviews/libraries.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:wassapviews/widgets/others.dart';
 
 class PremiumScreen extends StatelessWidget {
   const PremiumScreen({Key? key}) : super(key: key);
@@ -115,8 +115,7 @@ class PremiumScreen extends StatelessWidget {
                           text: 'SHARE NOW',
                           onPressed: () async {
                             UserSharedPreferences.setShared('true');
-                            String _link =
-                                "https://wa.me/?text=Hey!!!%20%0A*Have%20you%20been%20Wondering%20the%20strategies%20your%20friends%20are%20using%20to%20boost%20their%20WhatsApp%20views%3F%3F%3F*%0A%0A*Leave%20the%20Wonder%20land%2C%20click%20the%20link%20below%20and%20install%20wassapviews%20app%20to%20find%20out%20their%20secret*%0A%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                            String _link = "https://wa.me/?text=Hey!!!%20%0A*Have%20you%20been%20Wondering%20the%20strategies%20your%20friends%20are%20using%20to%20boost%20their%20WhatsApp%20views%3F%3F%3F*%0A%0A*Leave%20the%20Wonder%20land%2C%20click%20the%20link%20below%20and%20install%20wassapviews%20app%20to%20find%20out%20their%20secret*%0A%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                             if (await canLaunch(_link)) {
                               await launch(_link);
                             } else {
@@ -321,8 +320,7 @@ class PremiumScreen extends StatelessWidget {
                           text: 'SHARE NOW',
                           onPressed: () async {
                             UserSharedPreferences.setShared('true');
-                            String _link =
-                                "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                            String _link = "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                             if (await canLaunch(_link)) {
                               await launch(_link);
                             } else {
@@ -394,178 +392,9 @@ class PremiumScreen extends StatelessWidget {
       }
     }
 
-    /*void _deleteInactiveContacts() async {
-      LoadingDialogController _controller = context.read(loadingDialogProvider.notifier);
-      if (await FlutterContacts.requestPermission()) {
-        try {
-          String _code = UserSharedPreferences.getUserDialCode()!;
-          String _inititalNumber = UserSharedPreferences.getUserPhoneNumber()!;
-          String _number = _inititalNumber.substring(_code.length, _inititalNumber.length);
-
-          _controller.setLoading(true);
-          final _response = await post(
-            Uri.parse('https://app.wassapviews.ng/api/fetchoutdated'),
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-              'Authorization': authKey,
-            },
-            body: jsonEncode(
-              {
-                'country_code': _code,
-                'number': _number,
-              },
-            ),
-          ).timeout(
-            const Duration(seconds: 60),
-            onTimeout: () {
-              _controller.setLoading(false);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Connection timeout! Check your internet connection and try again.'),
-                  duration: Duration(seconds: 4),
-                ),
-              );
-              return Response('Error', 500);
-            },
-          );
-          if (_response.statusCode == 200 || _response.statusCode == 201) {
-            dynamic _fetchedData = jsonDecode(_response.body);
-            if (_fetchedData['status'] == 'success') {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Deleting inactive & outdated contacts',
-                  ),
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  behavior: SnackBarBehavior.floating,
-                  margin: const EdgeInsets.fromLTRB(
-                    50,
-                    0,
-                    50,
-                    70,
-                  ),
-                  duration: const Duration(seconds: 4),
-                ),
-              );
-              List _data = _fetchedData['data'];
-              _data.forEach((element) async {
-                Contact? contact = await FlutterContacts.getContact(element.toString());
-                if (contact != null && (contact.displayName).contains(' WV')) {
-                  await contact.delete();
-                }
-              });
-              _controller.setLoading(false);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Contacts updated successfully.',
-                  ),
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  behavior: SnackBarBehavior.floating,
-                  margin: const EdgeInsets.fromLTRB(
-                    50,
-                    0,
-                    50,
-                    70,
-                  ),
-                  duration: const Duration(seconds: 4),
-                ),
-              );
-            } else {
-              _controller.setLoading(false);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    _fetchedData['message'],
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Colors.red,
-                  behavior: SnackBarBehavior.floating,
-                  margin: const EdgeInsets.fromLTRB(
-                    50,
-                    0,
-                    50,
-                    70,
-                  ),
-                  duration: const Duration(seconds: 4),
-                ),
-              );
-            }
-          } else {
-            _controller.setLoading(false);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('An unexpected error occured'),
-                duration: Duration(seconds: 4),
-              ),
-            );
-          }
-        } on SocketException {
-          _controller.setLoading(false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('An error occured! Check your internet connection and try again.'),
-              duration: Duration(seconds: 4),
-            ),
-          );
-        } catch (e) {
-          _controller.setLoading(false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('An unexpected error occured: $e'),
-              duration: const Duration(seconds: 4),
-            ),
-          );
-        }
-      }
-    }*/
-
     return Scaffold(
       appBar: AppBar(
-        title: Consumer(
-          builder: (context, watch, widget) {
-            return (watch(premiumPlanStatusProvider) as String) == 'active'
-                ? RichText(
-                    text: TextSpan(
-                      text: 'Premium',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Plan',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                : RichText(
-                    text: TextSpan(
-                      text: 'Wassap',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Views',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-          },
-        ),
-        elevation: 0,
+        title: AppTitleName(),
       ),
       body: Stack(
         alignment: Alignment.topCenter,
@@ -995,8 +824,7 @@ class PremiumScreen extends StatelessWidget {
                         text: 'SHARE NOW',
                         onPressed: () async {
                           UserSharedPreferences.setShared('true');
-                          String _link =
-                              "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                          String _link = "https://wa.me/?text=*THE%20SECRET%20OF%20WHATSAPP%20TVs%20HAS%20BEEN%20REVEALED*%0A%0AAre%20you%20tired%20of%20getting%20low%20Whatsapp%20status%20views%3F%20Follow%20the%20link%20below%20to%20install%20Wassapviews%20app%20in%20order%20to%20gain%202k%2B%20Whatsapp%20status%20views%20for%20free%20with%20just%201%20click%F0%9F%98%B1%F0%9F%98%B1%F0%9F%92%83%F0%9F%92%83%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20*VISIT*%20%F0%9F%91%87%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0A%20%20https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
                           if (await canLaunch(_link)) {
                             await launch(_link);
                           } else {

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wassapviews/libraries.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:wassapviews/widgets/others.dart';
 
 class GetVcfScreen extends StatelessWidget {
   GetVcfScreen({Key? key}) : super(key: key);
@@ -50,49 +51,7 @@ class GetVcfScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Consumer(
-          builder: (context, watch, widget) {
-            return (watch(premiumPlanStatusProvider) as String) == 'active'
-                ? RichText(
-                    text: TextSpan(
-                      text: 'Premium',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Plan',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                : RichText(
-                    text: TextSpan(
-                      text: 'Wassap',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Views',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-          },
-        ),
+        title: AppTitleName(),
         elevation: 0,
       ),
       body: Stack(
@@ -383,10 +342,9 @@ class GetVcfScreen extends StatelessWidget {
                             text: 'SHARE NOW',
                             onPressed: () async {
                               UserSharedPreferences.setShared('true');
-                              String _link =
-                                  "https://wa.me/?text=Hey!!!%20%0A*Have%20you%20been%20Wondering%20the%20strategies%20your%20friends%20are%20using%20to%20boost%20their%20WhatsApp%20views%3F%3F%3F*%0A%0A*Leave%20the%20Wonder%20land%2C%20click%20the%20link%20below%20and%20install%20wassapviews%20app%20to%20find%20out%20their%20secret*%0A%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
-                              if (await canLaunch(_link)) {
-                                await launch(_link);
+                              String _link = "https://wa.me/?text=Hey!!!%20%0A*Have%20you%20been%20Wondering%20the%20strategies%20your%20friends%20are%20using%20to%20boost%20their%20WhatsApp%20views%3F%3F%3F*%0A%0A*Leave%20the%20Wonder%20land%2C%20click%20the%20link%20below%20and%20install%20wassapviews%20app%20to%20find%20out%20their%20secret*%0A%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                              if (await canLaunchUrl(Uri.parse(_link))) {
+                                await launchUrl(Uri.parse(_link));
                               } else {
                                 throw 'Could not launch $_link';
                               }
@@ -619,10 +577,9 @@ class GetVcfScreen extends StatelessWidget {
                         text: 'SHARE NOW',
                         onPressed: () async {
                           UserSharedPreferences.setShared('true');
-                          String _link =
-                              "https://wa.me/?text=Hey!!!%20%0A*Have%20you%20been%20Wondering%20the%20strategies%20your%20friends%20are%20using%20to%20boost%20their%20WhatsApp%20views%3F%3F%3F*%0A%0A*Leave%20the%20Wonder%20land%2C%20click%20the%20link%20below%20and%20install%20wassapviews%20app%20to%20find%20out%20their%20secret*%0A%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
-                          if (await canLaunch(_link)) {
-                            await launch(_link);
+                          String _link = "https://wa.me/?text=Hey!!!%20%0A*Have%20you%20been%20Wondering%20the%20strategies%20your%20friends%20are%20using%20to%20boost%20their%20WhatsApp%20views%3F%3F%3F*%0A%0A*Leave%20the%20Wonder%20land%2C%20click%20the%20link%20below%20and%20install%20wassapviews%20app%20to%20find%20out%20their%20secret*%0A%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%F0%9F%91%87%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews%0Ahttps%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.dartechlabs.wassapviews";
+                          if (await canLaunchUrl(Uri.parse(_link))) {
+                            await launchUrl(Uri.parse(_link));
                           } else {
                             throw 'Could not launch $_link';
                           }

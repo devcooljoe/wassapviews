@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wassapviews/libraries.dart';
+import 'package:wassapviews/widgets/others.dart';
 
 class SubmitContactScreen extends StatelessWidget {
   SubmitContactScreen({Key? key}) : super(key: key);
@@ -41,8 +42,8 @@ class SubmitContactScreen extends StatelessWidget {
                           Navigator.pop(context);
                           UserSharedPreferences.setWatchedVideo(true);
                           String url = 'https://www.youtube.com/watch?v=fiIu4c1gfx8';
-                          if (await canLaunch(url)) {
-                            await launch(url);
+                          if (await canLaunchUrl(Uri.parse(url))) {
+                            await launchUrl(Uri.parse(url));
                           } else {
                             throw 'Could not launch $url';
                           }
@@ -53,50 +54,7 @@ class SubmitContactScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: AppBar(
-        title: Consumer(
-          builder: (context, watch, widget) {
-            return (watch(premiumPlanStatusProvider) as String) == 'active'
-                ? RichText(
-                    text: TextSpan(
-                      text: 'Premium',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Plan',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                : RichText(
-                    text: TextSpan(
-                      text: 'Wassap',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: 'Views',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-          },
-        ),
-        elevation: 0,
+        title: AppTitleName(),
       ),
       body: Stack(
         alignment: Alignment.topCenter,
