@@ -56,7 +56,7 @@ class GlobalVariables {
   }
 
   static bool isDarkMode() {
-    Brightness _brightness = SchedulerBinding.instance.window.platformBrightness;
+    Brightness _brightness = SchedulerBinding.instance!.window.platformBrightness;
     if (theme == 'dark' || (theme == 'system' && _brightness == Brightness.dark)) {
       return true;
     } else {
